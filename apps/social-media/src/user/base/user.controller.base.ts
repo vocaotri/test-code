@@ -27,6 +27,9 @@ import { UserWhereUniqueInput } from "./UserWhereUniqueInput";
 import { UserFindManyArgs } from "./UserFindManyArgs";
 import { UserUpdateInput } from "./UserUpdateInput";
 import { User } from "./User";
+import { Post } from "../../post/base/Post";
+import { PostFindManyArgs } from "../../post/base/PostFindManyArgs";
+import { PostWhereUniqueInput } from "../../post/base/PostWhereUniqueInput";
 
 @swagger.ApiBearerAuth()
 @common.UseGuards(defaultAuthGuard.DefaultAuthGuard, nestAccessControl.ACGuard)
@@ -50,6 +53,7 @@ export class UserControllerBase {
     return await this.service.create({
       data: data,
       select: {
+        avatar: true,
         createdAt: true,
         firstName: true,
         id: true,
@@ -78,6 +82,7 @@ export class UserControllerBase {
     return this.service.findMany({
       ...args,
       select: {
+        avatar: true,
         createdAt: true,
         firstName: true,
         id: true,
@@ -107,6 +112,7 @@ export class UserControllerBase {
     const result = await this.service.findOne({
       where: params,
       select: {
+        avatar: true,
         createdAt: true,
         firstName: true,
         id: true,
@@ -145,6 +151,7 @@ export class UserControllerBase {
         where: params,
         data: data,
         select: {
+          avatar: true,
           createdAt: true,
           firstName: true,
           id: true,
@@ -182,6 +189,7 @@ export class UserControllerBase {
       return await this.service.delete({
         where: params,
         select: {
+          avatar: true,
           createdAt: true,
           firstName: true,
           id: true,
@@ -199,5 +207,109 @@ export class UserControllerBase {
       }
       throw error;
     }
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @common.Get("/:id/posts")
+  @ApiNestedQuery(PostFindManyArgs)
+  @nestAccessControl.UseRoles({
+    resource: "Post",
+    action: "read",
+    possession: "any",
+  })
+  async findManyPosts(
+    @common.Req() request: Request,
+    @common.Param() params: UserWhereUniqueInput
+  ): Promise<Post[]> {
+    const query = plainToClass(PostFindManyArgs, request.query);
+    const results = await this.service.findPosts(params.id, {
+      ...query,
+      select: {
+        content: true,
+        createdAt: true,
+        id: true,
+        thumbnail: true,
+        title: true,
+        updatedAt: true,
+
+        user: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @common.Post("/:id/posts")
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  async connectPosts(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: PostWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      posts: {
+        connect: body,
+      },
+    };
+    await this.service.update({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Patch("/:id/posts")
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  async updatePosts(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: PostWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      posts: {
+        set: body,
+      },
+    };
+    await this.service.update({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Delete("/:id/posts")
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  async disconnectPosts(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: PostWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      posts: {
+        disconnect: body,
+      },
+    };
+    await this.service.update({
+      where: params,
+      data,
+      select: { id: true },
+    });
   }
 }
