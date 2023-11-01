@@ -4,6 +4,6 @@ import { UserWhereUniqueInput } from "../user/UserWhereUniqueInput";
 export type PostCreateInput = {
   content?: string | null;
   thumbnail?: ImageWhereUniqueInput | null;
-  title: string;
+  title?: string | null;
   user?: UserWhereUniqueInput | null;
 };

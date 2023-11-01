@@ -11,14 +11,27 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { StringNullableFilter } from "../../util/StringNullableFilter";
+import { ImageWhereUniqueInput } from "../../image/base/ImageWhereUniqueInput";
+import { ValidateNested, IsOptional } from "class-validator";
 import { Type } from "class-transformer";
-import { IsOptional, ValidateNested } from "class-validator";
+import { StringNullableFilter } from "../../util/StringNullableFilter";
 import { StringFilter } from "../../util/StringFilter";
 import { PostListRelationFilter } from "../../post/base/PostListRelationFilter";
 
 @InputType()
 class UserWhereInput {
+  @ApiProperty({
+    required: false,
+    type: () => ImageWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => ImageWhereUniqueInput)
+  @IsOptional()
+  @Field(() => ImageWhereUniqueInput, {
+    nullable: true,
+  })
+  avatar?: ImageWhereUniqueInput;
+
   @ApiProperty({
     required: false,
     type: StringNullableFilter,

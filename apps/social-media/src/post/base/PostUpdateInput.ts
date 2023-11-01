@@ -50,7 +50,7 @@ class PostUpdateInput {
   @Field(() => String, {
     nullable: true,
   })
-  title?: string;
+  title?: string | null;
 
   @ApiProperty({
     required: false,

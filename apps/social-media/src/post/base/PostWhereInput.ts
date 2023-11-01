@@ -15,6 +15,7 @@ import { StringNullableFilter } from "../../util/StringNullableFilter";
 import { Type } from "class-transformer";
 import { IsOptional, ValidateNested } from "class-validator";
 import { StringFilter } from "../../util/StringFilter";
+import { ImageWhereUniqueInput } from "../../image/base/ImageWhereUniqueInput";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 
 @InputType()
@@ -43,14 +44,26 @@ class PostWhereInput {
 
   @ApiProperty({
     required: false,
-    type: StringFilter,
+    type: () => ImageWhereUniqueInput,
   })
-  @Type(() => StringFilter)
+  @ValidateNested()
+  @Type(() => ImageWhereUniqueInput)
   @IsOptional()
-  @Field(() => StringFilter, {
+  @Field(() => ImageWhereUniqueInput, {
     nullable: true,
   })
-  title?: StringFilter;
+  thumbnail?: ImageWhereUniqueInput;
+
+  @ApiProperty({
+    required: false,
+    type: StringNullableFilter,
+  })
+  @Type(() => StringNullableFilter)
+  @IsOptional()
+  @Field(() => StringNullableFilter, {
+    nullable: true,
+  })
+  title?: StringNullableFilter;
 
   @ApiProperty({
     required: false,

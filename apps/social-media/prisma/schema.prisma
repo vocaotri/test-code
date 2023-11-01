@@ -27,7 +27,7 @@ model Post {
   id          String   @id @default(cuid())
   thumbnail   Image?   @relation(fields: [thumbnailId], references: [id])
   thumbnailId String?  @unique
-  title       String
+  title       String?
   updatedAt   DateTime @updatedAt
   user        User?    @relation(fields: [userId], references: [id])
   userId      String?
@@ -36,8 +36,7 @@ model Post {
 model Image {
   createdAt DateTime @default(now())
   id        String   @id @default(cuid())
-  posts     Post?    @relation(fields: [postsId], references: [id])
-  postsId   String?  @unique
+  posts     Post?
   updatedAt DateTime @updatedAt
   url       String?
   users     User?

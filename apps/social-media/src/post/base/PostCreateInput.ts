@@ -42,12 +42,15 @@ class PostCreateInput {
   thumbnail?: ImageWhereUniqueInput | null;
 
   @ApiProperty({
-    required: true,
+    required: false,
     type: String,
   })
   @IsString()
-  @Field(() => String)
-  title!: string;
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  title?: string | null;
 
   @ApiProperty({
     required: false,

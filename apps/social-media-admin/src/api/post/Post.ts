@@ -6,7 +6,7 @@ export type Post = {
   createdAt: Date;
   id: string;
   thumbnail?: Image | null;
-  title: string;
+  title: string | null;
   updatedAt: Date;
   user?: User | null;
 };
