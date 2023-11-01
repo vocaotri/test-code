@@ -1,6 +1,14 @@
 import * as React from "react";
-import { List, Datagrid, ListProps, TextField, DateField } from "react-admin";
+import {
+  List,
+  Datagrid,
+  ListProps,
+  ReferenceField,
+  TextField,
+  DateField,
+} from "react-admin";
 import Pagination from "../Components/Pagination";
+import { IMAGE_TITLE_FIELD } from "../image/ImageTitle";
 
 export const UserList = (props: ListProps): React.ReactElement => {
   return (
@@ -12,7 +20,9 @@ export const UserList = (props: ListProps): React.ReactElement => {
       pagination={<Pagination />}
     >
       <Datagrid rowClick="show">
-        <TextField label="Avatar" source="avatar" />
+        <ReferenceField label="Avatar" source="image.id" reference="Image">
+          <TextField source={IMAGE_TITLE_FIELD} />
+        </ReferenceField>
         <DateField source="createdAt" label="Created At" />
         <TextField label="First Name" source="firstName" />
         <TextField label="ID" source="id" />

@@ -12,8 +12,9 @@ https://docs.amplication.com/how-to/custom-code
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsOptional, ValidateNested } from "class-validator";
-import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
+import { ImageWhereUniqueInput } from "../../image/base/ImageWhereUniqueInput";
 import { Type } from "class-transformer";
+import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 
 @InputType()
 class PostUpdateInput {
@@ -30,14 +31,15 @@ class PostUpdateInput {
 
   @ApiProperty({
     required: false,
-    type: String,
+    type: () => ImageWhereUniqueInput,
   })
-  @IsString()
+  @ValidateNested()
+  @Type(() => ImageWhereUniqueInput)
   @IsOptional()
-  @Field(() => String, {
+  @Field(() => ImageWhereUniqueInput, {
     nullable: true,
   })
-  thumbnail?: string | null;
+  thumbnail?: ImageWhereUniqueInput | null;
 
   @ApiProperty({
     required: false,

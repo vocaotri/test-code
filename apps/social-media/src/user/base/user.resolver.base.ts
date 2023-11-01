@@ -28,6 +28,7 @@ import { UserFindUniqueArgs } from "./UserFindUniqueArgs";
 import { User } from "./User";
 import { PostFindManyArgs } from "../../post/base/PostFindManyArgs";
 import { Post } from "../../post/base/Post";
+import { Image } from "../../image/base/Image";
 import { UserService } from "../user.service";
 @common.UseGuards(GqlDefaultAuthGuard, gqlACGuard.GqlACGuard)
 @graphql.Resolver(() => User)
@@ -88,7 +89,15 @@ export class UserResolverBase {
   async createUser(@graphql.Args() args: CreateUserArgs): Promise<User> {
     return await this.service.create({
       ...args,
-      data: args.data,
+      data: {
+        ...args.data,
+
+        avatar: args.data.avatar
+          ? {
+              connect: args.data.avatar,
+            }
+          : undefined,
+      },
     });
   }
 
@@ -103,7 +112,15 @@ export class UserResolverBase {
     try {
       return await this.service.update({
         ...args,
-        data: args.data,
+        data: {
+          ...args.data,
+
+          avatar: args.data.avatar
+            ? {
+                connect: args.data.avatar,
+              }
+            : undefined,
+        },
       });
     } catch (error) {
       if (isRecordNotFoundError(error)) {
@@ -152,5 +169,26 @@ export class UserResolverBase {
     }
 
     return results;
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => Image, {
+    nullable: true,
+    name: "avatar",
+  })
+  @nestAccessControl.UseRoles({
+    resource: "Image",
+    action: "read",
+    possession: "any",
+  })
+  async resolveFieldAvatar(
+    @graphql.Parent() parent: User
+  ): Promise<Image | null> {
+    const result = await this.service.getAvatar(parent.id);
+
+    if (!result) {
+      return null;
+    }
+    return result;
   }
 }

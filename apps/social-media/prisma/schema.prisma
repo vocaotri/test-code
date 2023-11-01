@@ -8,7 +8,8 @@ generator client {
 }
 
 model User {
-  avatar    String?
+  avatar    Image?   @relation(fields: [avatarId], references: [id])
+  avatarId  String?  @unique
   createdAt DateTime @default(now())
   firstName String?
   id        String   @id @default(cuid())
@@ -24,7 +25,7 @@ model Post {
   content   String?
   createdAt DateTime @default(now())
   id        String   @id @default(cuid())
-  thumbnail String?
+  thumbnail Image?
   title     String
   updatedAt DateTime @updatedAt
   user      User?    @relation(fields: [userId], references: [id])
@@ -34,6 +35,9 @@ model Post {
 model Image {
   createdAt DateTime @default(now())
   id        String   @id @default(cuid())
+  posts     Post?    @relation(fields: [postsId], references: [id])
+  postsId   String?  @unique
   updatedAt DateTime @updatedAt
   url       String?
+  users     User?
 }

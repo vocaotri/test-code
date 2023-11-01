@@ -28,7 +28,7 @@ class UserOrderByInput {
   @Field(() => SortOrder, {
     nullable: true,
   })
-  avatar?: SortOrder;
+  avatarId?: SortOrder;
 
   @ApiProperty({
     required: false,

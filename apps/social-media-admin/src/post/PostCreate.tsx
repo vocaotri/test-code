@@ -7,6 +7,7 @@ import {
   ReferenceInput,
   SelectInput,
 } from "react-admin";
+import { ImageTitle } from "../image/ImageTitle";
 import { UserTitle } from "../user/UserTitle";
 
 export const PostCreate = (props: CreateProps): React.ReactElement => {
@@ -14,7 +15,13 @@ export const PostCreate = (props: CreateProps): React.ReactElement => {
     <Create {...props}>
       <SimpleForm>
         <TextInput label="Content" multiline source="content" />
-        <TextInput label="Thumbnail" source="thumbnail" />
+        <ReferenceInput
+          source="thumbnail.id"
+          reference="Image"
+          label="Thumbnail"
+        >
+          <SelectInput optionText={ImageTitle} />
+        </ReferenceInput>
         <TextInput label="Title" source="title" />
         <ReferenceInput source="user.id" reference="User" label="User">
           <SelectInput optionText={UserTitle} />

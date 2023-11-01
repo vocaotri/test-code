@@ -50,6 +50,17 @@ class ImageOrderByInput {
   @Field(() => SortOrder, {
     nullable: true,
   })
+  postsId?: SortOrder;
+
+  @ApiProperty({
+    required: false,
+    enum: ["asc", "desc"],
+  })
+  @IsOptional()
+  @IsEnum(SortOrder)
+  @Field(() => SortOrder, {
+    nullable: true,
+  })
   updatedAt?: SortOrder;
 
   @ApiProperty({
@@ -62,6 +73,17 @@ class ImageOrderByInput {
     nullable: true,
   })
   url?: SortOrder;
+
+  @ApiProperty({
+    required: false,
+    enum: ["asc", "desc"],
+  })
+  @IsOptional()
+  @IsEnum(SortOrder)
+  @Field(() => SortOrder, {
+    nullable: true,
+  })
+  usersId?: SortOrder;
 }
 
 export { ImageOrderByInput as ImageOrderByInput };

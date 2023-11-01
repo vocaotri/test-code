@@ -51,6 +51,12 @@ export class PostControllerBase {
       data: {
         ...data,
 
+        thumbnail: data.thumbnail
+          ? {
+              connect: data.thumbnail,
+            }
+          : undefined,
+
         user: data.user
           ? {
               connect: data.user,
@@ -61,7 +67,13 @@ export class PostControllerBase {
         content: true,
         createdAt: true,
         id: true,
-        thumbnail: true,
+
+        thumbnail: {
+          select: {
+            id: true,
+          },
+        },
+
         title: true,
         updatedAt: true,
 
@@ -94,7 +106,13 @@ export class PostControllerBase {
         content: true,
         createdAt: true,
         id: true,
-        thumbnail: true,
+
+        thumbnail: {
+          select: {
+            id: true,
+          },
+        },
+
         title: true,
         updatedAt: true,
 
@@ -128,7 +146,13 @@ export class PostControllerBase {
         content: true,
         createdAt: true,
         id: true,
-        thumbnail: true,
+
+        thumbnail: {
+          select: {
+            id: true,
+          },
+        },
+
         title: true,
         updatedAt: true,
 
@@ -169,6 +193,12 @@ export class PostControllerBase {
         data: {
           ...data,
 
+          thumbnail: data.thumbnail
+            ? {
+                connect: data.thumbnail,
+              }
+            : undefined,
+
           user: data.user
             ? {
                 connect: data.user,
@@ -179,7 +209,13 @@ export class PostControllerBase {
           content: true,
           createdAt: true,
           id: true,
-          thumbnail: true,
+
+          thumbnail: {
+            select: {
+              id: true,
+            },
+          },
+
           title: true,
           updatedAt: true,
 
@@ -221,7 +257,13 @@ export class PostControllerBase {
           content: true,
           createdAt: true,
           id: true,
-          thumbnail: true,
+
+          thumbnail: {
+            select: {
+              id: true,
+            },
+          },
+
           title: true,
           updatedAt: true,
 

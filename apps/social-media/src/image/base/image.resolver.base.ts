@@ -26,6 +26,8 @@ import { ImageCountArgs } from "./ImageCountArgs";
 import { ImageFindManyArgs } from "./ImageFindManyArgs";
 import { ImageFindUniqueArgs } from "./ImageFindUniqueArgs";
 import { Image } from "./Image";
+import { Post } from "../../post/base/Post";
+import { User } from "../../user/base/User";
 import { ImageService } from "../image.service";
 @common.UseGuards(GqlDefaultAuthGuard, gqlACGuard.GqlACGuard)
 @graphql.Resolver(() => Image)
@@ -88,7 +90,21 @@ export class ImageResolverBase {
   async createImage(@graphql.Args() args: CreateImageArgs): Promise<Image> {
     return await this.service.create({
       ...args,
-      data: args.data,
+      data: {
+        ...args.data,
+
+        posts: args.data.posts
+          ? {
+              connect: args.data.posts,
+            }
+          : undefined,
+
+        users: args.data.users
+          ? {
+              connect: args.data.users,
+            }
+          : undefined,
+      },
     });
   }
 
@@ -105,7 +121,21 @@ export class ImageResolverBase {
     try {
       return await this.service.update({
         ...args,
-        data: args.data,
+        data: {
+          ...args.data,
+
+          posts: args.data.posts
+            ? {
+                connect: args.data.posts,
+              }
+            : undefined,
+
+          users: args.data.users
+            ? {
+                connect: args.data.users,
+              }
+            : undefined,
+        },
       });
     } catch (error) {
       if (isRecordNotFoundError(error)) {
@@ -136,5 +166,47 @@ export class ImageResolverBase {
       }
       throw error;
     }
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => Post, {
+    nullable: true,
+    name: "posts",
+  })
+  @nestAccessControl.UseRoles({
+    resource: "Post",
+    action: "read",
+    possession: "any",
+  })
+  async resolveFieldPosts(
+    @graphql.Parent() parent: Image
+  ): Promise<Post | null> {
+    const result = await this.service.getPosts(parent.id);
+
+    if (!result) {
+      return null;
+    }
+    return result;
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => User, {
+    nullable: true,
+    name: "users",
+  })
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "read",
+    possession: "any",
+  })
+  async resolveFieldUsers(
+    @graphql.Parent() parent: Image
+  ): Promise<User | null> {
+    const result = await this.service.getUsers(parent.id);
+
+    if (!result) {
+      return null;
+    }
+    return result;
   }
 }

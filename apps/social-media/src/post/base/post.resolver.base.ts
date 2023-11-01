@@ -26,6 +26,7 @@ import { PostCountArgs } from "./PostCountArgs";
 import { PostFindManyArgs } from "./PostFindManyArgs";
 import { PostFindUniqueArgs } from "./PostFindUniqueArgs";
 import { Post } from "./Post";
+import { Image } from "../../image/base/Image";
 import { User } from "../../user/base/User";
 import { PostService } from "../post.service";
 @common.UseGuards(GqlDefaultAuthGuard, gqlACGuard.GqlACGuard)
@@ -90,6 +91,12 @@ export class PostResolverBase {
       data: {
         ...args.data,
 
+        thumbnail: args.data.thumbnail
+          ? {
+              connect: args.data.thumbnail,
+            }
+          : undefined,
+
         user: args.data.user
           ? {
               connect: args.data.user,
@@ -112,6 +119,12 @@ export class PostResolverBase {
         ...args,
         data: {
           ...args.data,
+
+          thumbnail: args.data.thumbnail
+            ? {
+                connect: args.data.thumbnail,
+              }
+            : undefined,
 
           user: args.data.user
             ? {
@@ -147,6 +160,27 @@ export class PostResolverBase {
       }
       throw error;
     }
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => Image, {
+    nullable: true,
+    name: "thumbnail",
+  })
+  @nestAccessControl.UseRoles({
+    resource: "Image",
+    action: "read",
+    possession: "any",
+  })
+  async resolveFieldThumbnail(
+    @graphql.Parent() parent: Post
+  ): Promise<Image | null> {
+    const result = await this.service.getThumbnail(parent.id);
+
+    if (!result) {
+      return null;
+    }
+    return result;
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)

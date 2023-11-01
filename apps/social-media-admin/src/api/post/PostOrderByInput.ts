@@ -4,7 +4,7 @@ export type PostOrderByInput = {
   content?: SortOrder;
   createdAt?: SortOrder;
   id?: SortOrder;
-  thumbnail?: SortOrder;
+  thumbnailId?: SortOrder;
   title?: SortOrder;
   updatedAt?: SortOrder;
   userId?: SortOrder;

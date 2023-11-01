@@ -1,8 +1,9 @@
+import { Image } from "../image/Image";
 import { Post } from "../post/Post";
 import { JsonValue } from "type-fest";
 
 export type User = {
-  avatar: string | null;
+  avatar?: Image | null;
   createdAt: Date;
   firstName: string | null;
   id: string;

@@ -13,6 +13,7 @@ import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsOptional, IsDate, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
+import { Image } from "../../image/base/Image";
 import { User } from "../../user/base/User";
 
 @ObjectType()
@@ -46,14 +47,12 @@ class Post {
 
   @ApiProperty({
     required: false,
-    type: String,
+    type: () => Image,
   })
-  @IsString()
+  @ValidateNested()
+  @Type(() => Image)
   @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  thumbnail!: string | null;
+  thumbnail?: Image | null;
 
   @ApiProperty({
     required: true,

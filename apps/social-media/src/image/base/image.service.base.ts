@@ -10,7 +10,7 @@ https://docs.amplication.com/how-to/custom-code
 ------------------------------------------------------------------------------
   */
 import { PrismaService } from "../../prisma/prisma.service";
-import { Prisma, Image } from "@prisma/client";
+import { Prisma, Image, Post, User } from "@prisma/client";
 
 export class ImageServiceBase {
   constructor(protected readonly prisma: PrismaService) {}
@@ -45,5 +45,21 @@ export class ImageServiceBase {
     args: Prisma.SelectSubset<T, Prisma.ImageDeleteArgs>
   ): Promise<Image> {
     return this.prisma.image.delete(args);
+  }
+
+  async getPosts(parentId: string): Promise<Post | null> {
+    return this.prisma.image
+      .findUnique({
+        where: { id: parentId },
+      })
+      .posts();
+  }
+
+  async getUsers(parentId: string): Promise<User | null> {
+    return this.prisma.image
+      .findUnique({
+        where: { id: parentId },
+      })
+      .users();
   }
 }

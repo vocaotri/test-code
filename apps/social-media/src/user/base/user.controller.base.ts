@@ -51,9 +51,22 @@ export class UserControllerBase {
   })
   async create(@common.Body() data: UserCreateInput): Promise<User> {
     return await this.service.create({
-      data: data,
+      data: {
+        ...data,
+
+        avatar: data.avatar
+          ? {
+              connect: data.avatar,
+            }
+          : undefined,
+      },
       select: {
-        avatar: true,
+        avatar: {
+          select: {
+            id: true,
+          },
+        },
+
         createdAt: true,
         firstName: true,
         id: true,
@@ -82,7 +95,12 @@ export class UserControllerBase {
     return this.service.findMany({
       ...args,
       select: {
-        avatar: true,
+        avatar: {
+          select: {
+            id: true,
+          },
+        },
+
         createdAt: true,
         firstName: true,
         id: true,
@@ -112,7 +130,12 @@ export class UserControllerBase {
     const result = await this.service.findOne({
       where: params,
       select: {
-        avatar: true,
+        avatar: {
+          select: {
+            id: true,
+          },
+        },
+
         createdAt: true,
         firstName: true,
         id: true,
@@ -149,9 +172,22 @@ export class UserControllerBase {
     try {
       return await this.service.update({
         where: params,
-        data: data,
+        data: {
+          ...data,
+
+          avatar: data.avatar
+            ? {
+                connect: data.avatar,
+              }
+            : undefined,
+        },
         select: {
-          avatar: true,
+          avatar: {
+            select: {
+              id: true,
+            },
+          },
+
           createdAt: true,
           firstName: true,
           id: true,
@@ -189,7 +225,12 @@ export class UserControllerBase {
       return await this.service.delete({
         where: params,
         select: {
-          avatar: true,
+          avatar: {
+            select: {
+              id: true,
+            },
+          },
+
           createdAt: true,
           firstName: true,
           id: true,
@@ -228,7 +269,13 @@ export class UserControllerBase {
         content: true,
         createdAt: true,
         id: true,
-        thumbnail: true,
+
+        thumbnail: {
+          select: {
+            id: true,
+          },
+        },
+
         title: true,
         updatedAt: true,
 

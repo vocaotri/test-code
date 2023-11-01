@@ -61,7 +61,7 @@ class PostOrderByInput {
   @Field(() => SortOrder, {
     nullable: true,
   })
-  thumbnail?: SortOrder;
+  thumbnailId?: SortOrder;
 
   @ApiProperty({
     required: false,

@@ -49,12 +49,39 @@ export class ImageControllerBase {
   })
   async create(@common.Body() data: ImageCreateInput): Promise<Image> {
     return await this.service.create({
-      data: data,
+      data: {
+        ...data,
+
+        posts: data.posts
+          ? {
+              connect: data.posts,
+            }
+          : undefined,
+
+        users: data.users
+          ? {
+              connect: data.users,
+            }
+          : undefined,
+      },
       select: {
         createdAt: true,
         id: true,
+
+        posts: {
+          select: {
+            id: true,
+          },
+        },
+
         updatedAt: true,
         url: true,
+
+        users: {
+          select: {
+            id: true,
+          },
+        },
       },
     });
   }
@@ -78,8 +105,21 @@ export class ImageControllerBase {
       select: {
         createdAt: true,
         id: true,
+
+        posts: {
+          select: {
+            id: true,
+          },
+        },
+
         updatedAt: true,
         url: true,
+
+        users: {
+          select: {
+            id: true,
+          },
+        },
       },
     });
   }
@@ -104,8 +144,21 @@ export class ImageControllerBase {
       select: {
         createdAt: true,
         id: true,
+
+        posts: {
+          select: {
+            id: true,
+          },
+        },
+
         updatedAt: true,
         url: true,
+
+        users: {
+          select: {
+            id: true,
+          },
+        },
       },
     });
     if (result === null) {
@@ -135,12 +188,39 @@ export class ImageControllerBase {
     try {
       return await this.service.update({
         where: params,
-        data: data,
+        data: {
+          ...data,
+
+          posts: data.posts
+            ? {
+                connect: data.posts,
+              }
+            : undefined,
+
+          users: data.users
+            ? {
+                connect: data.users,
+              }
+            : undefined,
+        },
         select: {
           createdAt: true,
           id: true,
+
+          posts: {
+            select: {
+              id: true,
+            },
+          },
+
           updatedAt: true,
           url: true,
+
+          users: {
+            select: {
+              id: true,
+            },
+          },
         },
       });
     } catch (error) {
@@ -173,8 +253,21 @@ export class ImageControllerBase {
         select: {
           createdAt: true,
           id: true,
+
+          posts: {
+            select: {
+              id: true,
+            },
+          },
+
           updatedAt: true,
           url: true,
+
+          users: {
+            select: {
+              id: true,
+            },
+          },
         },
       });
     } catch (error) {

@@ -4,20 +4,23 @@ import {
   Show,
   SimpleShowLayout,
   ShowProps,
+  ReferenceField,
   TextField,
   DateField,
   ReferenceManyField,
   Datagrid,
-  ReferenceField,
 } from "react-admin";
 
+import { IMAGE_TITLE_FIELD } from "../image/ImageTitle";
 import { USER_TITLE_FIELD } from "./UserTitle";
 
 export const UserShow = (props: ShowProps): React.ReactElement => {
   return (
     <Show {...props}>
       <SimpleShowLayout>
-        <TextField label="Avatar" source="avatar" />
+        <ReferenceField label="Avatar" source="image.id" reference="Image">
+          <TextField source={IMAGE_TITLE_FIELD} />
+        </ReferenceField>
         <DateField source="createdAt" label="Created At" />
         <TextField label="First Name" source="firstName" />
         <TextField label="ID" source="id" />
@@ -30,7 +33,13 @@ export const UserShow = (props: ShowProps): React.ReactElement => {
             <TextField label="Content" source="content" />
             <DateField source="createdAt" label="Created At" />
             <TextField label="ID" source="id" />
-            <TextField label="Thumbnail" source="thumbnail" />
+            <ReferenceField
+              label="Thumbnail"
+              source="image.id"
+              reference="Image"
+            >
+              <TextField source={IMAGE_TITLE_FIELD} />
+            </ReferenceField>
             <TextField label="Title" source="title" />
             <DateField source="updatedAt" label="Updated At" />
             <ReferenceField label="User" source="user.id" reference="User">

@@ -4,12 +4,15 @@ import {
   Create,
   SimpleForm,
   CreateProps,
+  ReferenceInput,
+  SelectInput,
   TextInput,
   PasswordInput,
   ReferenceArrayInput,
   SelectArrayInput,
 } from "react-admin";
 
+import { ImageTitle } from "../image/ImageTitle";
 import { PostTitle } from "../post/PostTitle";
 import { ROLES_OPTIONS } from "../user/RolesOptions";
 
@@ -17,7 +20,9 @@ export const UserCreate = (props: CreateProps): React.ReactElement => {
   return (
     <Create {...props}>
       <SimpleForm>
-        <TextInput label="Avatar" source="avatar" />
+        <ReferenceInput source="avatar.id" reference="Image" label="Avatar">
+          <SelectInput optionText={ImageTitle} />
+        </ReferenceInput>
         <TextInput label="First Name" source="firstName" />
         <TextInput label="Last Name" source="lastName" />
         <PasswordInput label="Password" source="password" />
